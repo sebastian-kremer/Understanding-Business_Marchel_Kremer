@@ -28,3 +28,4 @@ data$age_group[data$age >=50 & data$age < 60] <- "50-60"
 data$age_group[data$age >=60 & data$age < 70] <- "60-70"
 data$age_group[data$age >=70 & data$age < 80] <- "70-80"
 
+table(data$age_group)
