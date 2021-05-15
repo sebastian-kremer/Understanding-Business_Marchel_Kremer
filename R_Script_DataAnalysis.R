@@ -3,17 +3,21 @@ library(tidyverse)
 
 data <- read.csv("dataset_31_credit-g.csv")
 
-if(data$age >= 0 & data$age < 10) {data$age_group <- "0-10"} else
-if(data$age >= 10 & data$age < 20) {data$age_group <- "10-20"}
-if(data$age >= 20 & data$age < 30) {data$age_group <- "20-30"}
-if(data$age >= 30 & data$age < 40) {data$age_group <- "30-40"}
-if(data$age >= 40 & data$age < 50) {data$age_group <- "40-50"}
-if(data$age >= 50 & data$age < 60) {data$age_group <- "50-60"}
-if(data$age >= 60 & data$age < 70) {data$age_group <- "60-70"}
-if(data$age >= 70 & data$age < 80) {data$age_group <- "70-80"}
-if(data$age >= 80 & data$age < 90) {data$age_group <- "80-90"}
+summary(data$age)
 
-data$age_group
+data <- within(data, {   
+  Age.group <- NA # need to initialize variable
+  Age.group[age < 20] <- "under 20"
+  Age.group[age >=20 & age <30] <- "20-29"
+  Age.group[age >=30 & age <40] <- "30-39"
+  Age.group[age >=40 & age <50] <- "40-49"
+  Age.group[age >=50 & age <60] <- "50-59"
+  Age.group[age >=60 & age <70] <- "60-69"
+  Age.group[age >=70 & age <30] <- "over 70"
 
 
-data$age_group <- 
+} )
+
+table(data$Age.group)
+
+
