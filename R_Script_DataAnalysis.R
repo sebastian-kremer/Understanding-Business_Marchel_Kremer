@@ -17,8 +17,8 @@ data <- within(data, {
   Age.group[age >=50 & age <60] <- "50-59"
   Age.group[age >=60 & age <70] <- "60-69"
   Age.group[age >=70 ] <- "over 70"
-
-
+  
+  
 } )
 
 table(data$Age.group)
@@ -39,8 +39,8 @@ data$Class[data$class == "bad"] <- 0
 set.seed(987654321)
 
 data_full_training <- createDataPartition(data$Class,
-                                            p = 0.7, 
-                                            list = FALSE) 
+                                          p = 0.7, 
+                                          list = FALSE) 
 data_full_train <- data[data_full_training,]
 data_full_test <- data[-data_full_training,]
 
@@ -50,8 +50,8 @@ data_logit1 <- glm(Class ~ checking_status + duration + credit_history + purpose
                      other_parties + residence_since + property_magnitude + age + other_payment_plans +
                      housing + existing_credits + job + num_dependents + own_telephone + foreign_worker +
                      Gender,
-                    family =  binomial(link = "logit"),
-                    data = data_full_train)
+                   family =  binomial(link = "logit"),
+                   data = data_full_train)
 
 summary(data_logit1)
 
@@ -68,8 +68,8 @@ data_full_training_men <- createDataPartition(data_men$Class,
                                               list = FALSE)
 
 data_full_training_women <- createDataPartition(data_women$Class,
-                                              p = 250/310, 
-                                              list = FALSE)
+                                                p = 250/310, 
+                                                list = FALSE)
 
 data_men_train <- data_men[data_full_training_men,]
 data_women_train <- data_women[data_full_training_women,]
@@ -102,7 +102,57 @@ ggplot(data = data, aes(x = age, y = credit_amount)) +
 table(data$Gender)
 table(data$Gender, data$residence_since)
 
+#GENDER
+
+
+# Residence since
 tab <- with(data, table(Gender, residence_since))
 
 prop.table(tab, margin = 1)
 
+# credit history
+tab <- with(data, table(Gender, credit_history))
+
+prop.table(tab, margin = 1)
+
+#purpose
+tab <- with(data, table(Gender, purpose))
+
+prop.table(tab, margin = 1)
+
+
+
+
+#savings_status
+tab <- with(data, table(Gender, savings_status))
+
+prop.table(tab, margin = 1)
+
+#employment
+tab <- with(data, table(Gender, employment))
+
+prop.table(tab, margin = 1)
+
+
+#installment commitment
+tab <- with(data, table(Gender,installment_commitment))
+
+prop.table(tab, margin = 1)
+
+
+#other_parties
+tab <- with(data, table(Gender, other_parties))
+
+prop.table(tab, margin = 1)
+
+
+#property_magnitude
+tab <- with(data, table(Gender, property_magnitude))
+
+prop.table(tab, margin = 1)
+
+
+#housing
+tab <- with(data, table(Gender, housing))
+
+prop.table(tab, margin = 1)
