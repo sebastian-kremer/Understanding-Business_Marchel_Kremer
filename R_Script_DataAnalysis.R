@@ -99,7 +99,10 @@ ggplot(data = data, aes(x = age, y = duration)) +
 ggplot(data = data, aes(x = age, y = credit_amount)) +
   geom_point()
 
-table(data$residence_since, data$Gender)
-table(data$Gender, data$residence_since)/length(data$Gender)
+table(data$Gender)
+table(data$Gender, data$residence_since)
 
+tab <- with(data, table(Gender, residence_since))
+
+prop.table(tab, margin = 1)
 
