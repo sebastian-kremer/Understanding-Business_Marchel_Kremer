@@ -91,3 +91,15 @@ data_logit2 <- glm(Class ~ checking_status + duration + credit_history + purpose
                    data = data_full_train2)
 
 summary(data_logit2)
+
+
+ggplot(data = data, aes(x = age, y = duration)) +
+  geom_point()
+
+ggplot(data = data, aes(x = age, y = credit_amount)) +
+  geom_point()
+
+table(data$residence_since, data$Gender)
+table(data$Gender, data$residence_since)/length(data$Gender)
+
+
