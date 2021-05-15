@@ -19,13 +19,8 @@ data <- within(data, {
 table(data$Age.group)
 
 
-data$age_group[data$age >=0 & data$age < 10] <- "0-10"
-data$age_group[data$age >=10 & data$age < 20] <- "10-20"
-data$age_group[data$age >=20 & data$age < 30] <- "20-30"
-data$age_group[data$age >=30 & data$age < 40] <- "30-40"
-data$age_group[data$age >=40 & data$age < 50] <- "40-50"
-data$age_group[data$age >=50 & data$age < 60] <- "50-60"
-data$age_group[data$age >=60 & data$age < 70] <- "60-70"
-data$age_group[data$age >=70 & data$age < 80] <- "70-80"
-
-table(data$age_group)
+data$Gender <- NA
+data$Gender[data$personal_status == "'female div/dep/mar'"] <- "female"
+data$Gender[data$personal_status == "'male single'"] <- "male"
+data$Gender[data$personal_status == "'male div/sep'"] <- "male"
+data$Gender[data$personal_status == "'male mar/wid'"] <- "male"
