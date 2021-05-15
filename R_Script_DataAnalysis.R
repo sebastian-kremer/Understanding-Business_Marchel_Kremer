@@ -102,7 +102,57 @@ ggplot(data = data, aes(x = age, y = credit_amount)) +
 table(data$Gender)
 table(data$Gender, data$residence_since)
 
+#GENDER
+
+
+# Residence since
 tab <- with(data, table(Gender, residence_since))
 
 prop.table(tab, margin = 1)
 
+# credit history
+tab <- with(data, table(Gender, credit_history))
+
+prop.table(tab, margin = 1)
+
+#purpose
+tab <- with(data, table(Gender, purpose))
+
+prop.table(tab, margin = 1)
+
+
+
+
+#savings_status
+tab <- with(data, table(Gender, savings_status))
+
+prop.table(tab, margin = 1)
+
+#employment
+tab <- with(data, table(Gender, employment))
+
+prop.table(tab, margin = 1)
+
+
+#installment commitment
+tab <- with(data, table(Gender,installment_commitment))
+
+prop.table(tab, margin = 1)
+
+
+#other_parties
+tab <- with(data, table(Gender, other_parties))
+
+prop.table(tab, margin = 1)
+
+
+#property_magnitude
+tab <- with(data, table(Gender, property_magnitude))
+
+prop.table(tab, margin = 1)
+
+
+#housing
+tab <- with(data, table(Gender, housing))
+
+prop.table(tab, margin = 1)
