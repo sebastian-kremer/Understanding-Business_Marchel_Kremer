@@ -55,3 +55,39 @@ data_logit1 <- glm(Class ~ checking_status + duration + credit_history + purpose
 
 summary(data_logit1)
 
+table(data$Gender)
+
+data_men <- data[data$Gender == "male",]
+data_women <- data[data$Gender == "female",]
+
+
+#We want in our training dataset 250 females and 250 males
+
+data_full_training_men <- createDataPartition(data_men$Class,
+                                              p = 250/690, 
+                                              list = FALSE)
+
+data_full_training_women <- createDataPartition(data_women$Class,
+                                              p = 250/310, 
+                                              list = FALSE)
+
+data_men_train <- data_men[data_full_training_men,]
+data_women_train <- data_women[data_full_training_women,]
+
+data_men_test <- data_men[-data_full_training_men,]
+data_women_test <- data_women[-data_full_training_women,]
+
+data_full_train2 <- rbind(data_men_train,data_women_train)
+data_full_test2 <- rbind(data_men_test, data_women_test)
+
+table(data_full_train$Gender)
+
+data_logit2 <- glm(Class ~ checking_status + duration + credit_history + purpose +
+                     credit_amount + savings_status + employment + installment_commitment + 
+                     other_parties + residence_since + property_magnitude + age + other_payment_plans +
+                     housing + existing_credits + job + num_dependents + own_telephone + foreign_worker +
+                     Gender,
+                   family =  binomial(link = "logit"),
+                   data = data_full_train2)
+
+summary(data_logit2)
