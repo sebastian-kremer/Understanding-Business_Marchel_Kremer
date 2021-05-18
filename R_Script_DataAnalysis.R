@@ -3,6 +3,7 @@ library(dplyr)
 library(readr)
 library(caret)
 library(lmtest)
+library(reshape2)
 
 data <- read.csv("dataset_31_credit-g.csv")
 
@@ -81,6 +82,7 @@ data_full_train2 <- rbind(data_men_train,data_women_train)
 data_full_test2 <- rbind(data_men_test, data_women_test)
 
 table(data_full_train$Gender)
+table(data_full_train2$Gender)
 
 data_logit2 <- glm(Class ~ checking_status + duration + credit_history + purpose +
                      credit_amount + savings_status + employment + installment_commitment + 
@@ -106,7 +108,7 @@ table(data$Gender, data$residence_since)
 
 
 # Residence since
-tab1 <- with(data, table(Gender, residence_since))
+tab1 <- with(data_full_train2, table(Gender, residence_since))
 
 prop.table(tab1, margin = 1)
 
@@ -114,14 +116,114 @@ summary(tab1)
 
 df_1 <- data.frame(
   Residence_since=c("1 year","2 years","3 years","4 years"),  
-  Female=c(0.16,0.27,0.11,0.46), 
-  Male = c(0.11,0.33,0.17,0.39))
+  Female=c(0.17,0.26,0.11,0.46), 
+  Male = c(0.12,0.34,0.20,0.34))
 
+plot1_data <- melt(df_1, id.vars = "Residence_since")
+colnames(plot1_data) <- c("Residence_since", "Gender", "Percentage")
 
 # Barplot
-ggplot(df_1, aes(x=Residence_since)) + 
-  geom_bar(stat = "identity", aes(y=Female)) +
-  geom_bar(stat = "identity", aes(y=Male))
+ggplot(plot1_data, aes(x=Residence_since, y = Percentage, fill = Gender)) + 
+  geom_bar(stat = "identity", position = "dodge") +
+  ggtitle("Model 2")
+
+#Model 3
+#250 Women: 0.40% 4 years, 0.15% 3 years, 0.3% 2 years, 0.15% 1 year
+#250 Men: 0.40% 4 years, 0.15% 3 years, 0.3% 2 years, 0.15% 1 year
+
+#0.4% = 100, 0.3% = 75, 0.15% = 37.5
+
+data_women_1 <- data_women[data_women$residence_since == 1,]
+data_women_2 <- data_women[data_women$residence_since == 2,]
+data_women_3 <- data_women[data_women$residence_since == 3,]
+data_women_4 <- data_women[data_women$residence_since == 4,]
+
+data_men_1 <- data_men[data_men$residence_since == 1,]
+data_men_2 <- data_men[data_men$residence_since == 2,]
+data_men_3 <- data_men[data_men$residence_since == 3,]
+data_men_4 <- data_men[data_men$residence_since == 4,]
+
+data_full_training_men_1 <- createDataPartition(data_men_1$Class,
+                                              p = 45/80, 
+                                              list = FALSE)
+
+data_full_training_men_2 <- createDataPartition(data_men_2$Class,
+                                                p = 75/225, 
+                                                list = FALSE)
+
+data_full_training_men_3 <- createDataPartition(data_men_3$Class,
+                                                p = 30/114, 
+                                                list = FALSE)
+
+data_full_training_men_4 <- createDataPartition(data_men_4$Class,
+                                                p = 100/271, 
+                                                list = FALSE)
+
+data_full_training_women_1 <- createDataPartition(data_women_1$Class,
+                                                p = 45/50, 
+                                                list = FALSE)
+
+data_full_training_women_2 <- createDataPartition(data_women_2$Class,
+                                                p = 75/83, 
+                                                list = FALSE)
+
+data_full_training_women_3 <- createDataPartition(data_women_3$Class,
+                                                p = 30/35, 
+                                                list = FALSE)
+
+data_full_training_women_4 <- createDataPartition(data_women_4$Class,
+                                                p = 100/142, 
+                                                list = FALSE)
+
+data_men_train_1 <- data_men_1[data_full_training_men_1,]
+data_men_train_2 <- data_men_2[data_full_training_men_2,]
+data_men_train_3 <- data_men_3[data_full_training_men_3,]
+data_men_train_4 <- data_men_4[data_full_training_men_4,]
+
+data_women_train_1 <- data_women_1[data_full_training_women_1,]
+data_women_train_2 <- data_women_2[data_full_training_women_2,]
+data_women_train_3 <- data_women_3[data_full_training_women_3,]
+data_women_train_4 <- data_women_4[data_full_training_women_4,]
+
+data_men_test_1 <- data_men_1[-data_full_training_men_1,]
+data_men_test_2 <- data_men_2[-data_full_training_men_2,]
+data_men_test_3 <- data_men_3[-data_full_training_men_3,]
+data_men_test_4 <- data_men_4[-data_full_training_men_4,]
+
+data_women_test_1 <- data_women_1[-data_full_training_women_1,]
+data_women_test_2 <- data_women_2[-data_full_training_women_2,]
+data_women_test_3 <- data_women_3[-data_full_training_women_3,]
+data_women_test_4 <- data_women_4[-data_full_training_women_4,]
+
+data_full_train3 <- rbind(data_men_train_1,data_men_train_2,
+                          data_men_train_3,data_men_train_4,
+                          data_women_train_1,data_women_train_2,
+                          data_women_train_3,data_women_train_4)
+data_full_test3 <- rbind(data_men_test_1, data_men_test_2,
+                         data_men_test_3,data_men_test_4,
+                         data_women_test_1,data_women_test_2,
+                         data_women_test_3,data_women_test_4)
+
+tab2 <- with(data_full_train3, table(Gender, residence_since))
+
+prop.table(tab2, margin = 1)
+
+summary(tab2)
+
+df_2 <- data.frame(
+  Residence_since=c("1 year","2 years","3 years","4 years"),  
+  Female=c(0.18,0.30,0.12,0.40), 
+  Male = c(0.18,0.30,0.12,0.40))
+
+plot2_data <- melt(df_2, id.vars = "Residence_since")
+colnames(plot2_data) <- c("Residence_since", "Gender", "Percentage")
+
+# Barplot
+ggplot(plot2_data, aes(x=Residence_since, y = Percentage, fill = Gender)) + 
+  geom_bar(stat = "identity", position = "dodge") +
+  ggtitle("Model 3")
+
+
 
 # credit history
 tab2 <- with(data, table(Gender, credit_history))
