@@ -273,5 +273,102 @@ tab8 <- with(data, table(Gender, housing))
 prop.table(tab8, margin = 1)
 
 
+#Model 4
+#employment
+#250 Women: 63 <1, 47 >=7, 85 1 to 4, 40 4 to 7, 15 unemployed
+#250 Men: 63 <1, 47 >=7, 85 1 to 4, 40 4 to 7, 15 unemployed
+
+tab <- with(data, table(Gender, employment))
+
+prop.table(tab, margin = 1)
+
+data_women_1 <- data_women[data_women$employment == "'<1'",]
+data_women_2 <- data_women[data_women$employment == "'>=7'",]
+data_women_3 <- data_women[data_women$employment == "'1<=X<4'",]
+data_women_4 <- data_women[data_women$employment == "'4<=X<7'",]
+data_women_5 <- data_women[data_women$employment == "unemployed",]
+
+data_men_1 <- data_men[data_men$employment == "'<1'",]
+data_men_2 <- data_men[data_men$employment == "'>=7'",]
+data_men_3 <- data_men[data_men$employment == "'1<=X<4'",]
+data_men_4 <- data_men[data_men$employment == "'4<=X<7'",]
+data_men_5 <- data_men[data_men$employment == "unemployed",]
 
 
+data_full_training_men_1 <- createDataPartition(data_men_1$Class,
+                                                p = 63/86, 
+                                                list = FALSE)
+
+data_full_training_men_2 <- createDataPartition(data_men_2$Class,
+                                                p = 47/206, 
+                                                list = FALSE)
+
+data_full_training_men_3 <- createDataPartition(data_men_3$Class,
+                                                p = 85/232, 
+                                                list = FALSE)
+
+data_full_training_men_4 <- createDataPartition(data_men_4$Class,
+                                                p = 39/127, 
+                                                list = FALSE)
+
+data_full_training_men_5 <- createDataPartition(data_men_5$Class,
+                                                p = 15/39, 
+                                                list = FALSE)
+
+data_full_training_women_1 <- createDataPartition(data_women_1$Class,
+                                                  p = 63/86, 
+                                                  list = FALSE)
+
+data_full_training_women_2 <- createDataPartition(data_women_2$Class,
+                                                  p = 47/47, 
+                                                  list = FALSE)
+
+data_full_training_women_3 <- createDataPartition(data_women_3$Class,
+                                                  p = 85/107, 
+                                                  list = FALSE)
+
+data_full_training_women_4 <- createDataPartition(data_women_4$Class,
+                                                  p = 40/47, 
+                                                  list = FALSE)
+
+data_full_training_women_5 <- createDataPartition(data_women_5$Class,
+                                                  p = 15/23, 
+                                                  list = FALSE)
+
+
+data_men_train_1 <- data_men_1[data_full_training_men_1,]
+data_men_train_2 <- data_men_2[data_full_training_men_2,]
+data_men_train_3 <- data_men_3[data_full_training_men_3,]
+data_men_train_4 <- data_men_4[data_full_training_men_4,]
+data_men_train_5 <- data_men_5[data_full_training_men_5,]
+
+data_women_train_1 <- data_women_1[data_full_training_women_1,]
+data_women_train_2 <- data_women_2[data_full_training_women_2,]
+data_women_train_3 <- data_women_3[data_full_training_women_3,]
+data_women_train_4 <- data_women_4[data_full_training_women_4,]
+data_women_train_5 <- data_women_5[data_full_training_women_5,]
+
+data_men_test_1 <- data_men_1[-data_full_training_men_1,]
+data_men_test_2 <- data_men_2[-data_full_training_men_2,]
+data_men_test_3 <- data_men_3[-data_full_training_men_3,]
+data_men_test_4 <- data_men_4[-data_full_training_men_4,]
+data_men_test_5 <- data_men_5[-data_full_training_men_5,]
+
+data_women_test_1 <- data_women_1[-data_full_training_women_1,]
+data_women_test_2 <- data_women_2[-data_full_training_women_2,]
+data_women_test_3 <- data_women_3[-data_full_training_women_3,]
+data_women_test_4 <- data_women_4[-data_full_training_women_4,]
+data_women_test_5 <- data_women_5[-data_full_training_women_5,]
+
+data_full_train4 <- rbind(data_men_train_1,data_men_train_2,
+                          data_men_train_3,data_men_train_4,data_men_train_5,
+                          data_women_train_1,data_women_train_2,
+                          data_women_train_3,data_women_train_4,data_women_train_5)
+data_full_test4 <- rbind(data_men_test_1, data_men_test_2,
+                         data_men_test_3,data_men_test_4,data_men_test_5,
+                         data_women_test_1,data_women_test_2,
+                         data_women_test_3,data_women_test_4,data_women_test_5)
+
+tab <- with(data_full_train4, table(Gender, employment))
+
+prop.table(tab, margin = 1)
