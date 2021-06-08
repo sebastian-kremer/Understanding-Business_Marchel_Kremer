@@ -223,54 +223,16 @@ ggplot(plot2_data, aes(x=Residence_since, y = Percentage, fill = Gender)) +
   geom_bar(stat = "identity", position = "dodge") +
   ggtitle("Model 3")
 
+data_logit3 <- glm(Class ~ checking_status + duration + credit_history + purpose +
+                     credit_amount + savings_status + employment + installment_commitment + 
+                     other_parties + residence_since + property_magnitude + age + other_payment_plans +
+                     housing + existing_credits + job + num_dependents + own_telephone + foreign_worker +
+                     Gender,
+                   family =  binomial(link = "logit"),
+                   data = data_full_train3)
 
+summary(data_logit3)
 
-# credit history
-tab2 <- with(data, table(Gender, credit_history))
-
-prop.table(tab2, margin = 1)
-
-#purpose
-tab3 <- with(data, table(Gender, purpose))
-
-prop.table(tab3, margin = 1)
-
-
-
-
-#savings_status
-tab4 <- with(data, table(Gender, savings_status))
-
-prop.table(tab4, margin = 1)
-
-#employment
-tab <- with(data, table(Gender, employment))
-
-prop.table(tab, margin = 1)
-
-
-#installment commitment
-tab5 <- with(data, table(Gender,installment_commitment))
-
-prop.table(tab5, margin = 1)
-
-
-#other_parties
-tab6 <- with(data, table(Gender, other_parties))
-
-prop.table(tab6, margin = 1)
-
-
-#property_magnitude
-tab7 <- with(data, table(Gender, property_magnitude))
-
-prop.table(tab7, margin = 1)
-
-
-#housing
-tab8 <- with(data, table(Gender, housing))
-
-prop.table(tab8, margin = 1)
 
 
 #Model 4
@@ -372,3 +334,59 @@ data_full_test4 <- rbind(data_men_test_1, data_men_test_2,
 tab <- with(data_full_train4, table(Gender, employment))
 
 prop.table(tab, margin = 1)
+
+data_logit4 <- glm(Class ~ checking_status + duration + credit_history + purpose +
+                     credit_amount + savings_status + employment + installment_commitment + 
+                     other_parties + residence_since + property_magnitude + age + other_payment_plans +
+                     housing + existing_credits + job + num_dependents + own_telephone + foreign_worker +
+                     Gender,
+                   family =  binomial(link = "logit"),
+                   data = data_full_train4)
+
+summary(data_logit4)
+
+
+#Accuracy tables
+
+data_full_test$prob <- predict(data_logit1, data_full_test, type = "response")
+
+data_full_test <- data_full_test %>% mutate(pred = 1*(prob > 0.5))
+
+data_full_test <- data_full_test %>% mutate(accurate = 1*(pred == Class))
+
+sum(data_full_test$accurate)/nrow(data_full_test)
+
+
+
+data_full_test2$prob <- predict(data_logit2, data_full_test2, type = "response")
+
+data_full_test2 <- data_full_test2 %>% mutate(pred = 1*(prob > 0.5))
+
+data_full_test2 <- data_full_test2 %>% mutate(accurate = 1*(pred == Class))
+
+sum(data_full_test2$accurate)/nrow(data_full_test2)
+
+
+data_full_test3$prob <- predict(data_logit3, data_full_test3, type = "response")
+
+data_full_test3 <- data_full_test3 %>% mutate(pred = 1*(prob > 0.5))
+
+data_full_test3 <- data_full_test3 %>% mutate(accurate = 1*(pred == Class))
+
+sum(data_full_test3$accurate)/nrow(data_full_test3)
+
+
+data_full_test4$prob <- predict(data_logit4, data_full_test4, type = "response")
+
+data_full_test4 <- data_full_test4 %>% mutate(pred = 1*(prob > 0.5))
+
+data_full_test4 <- data_full_test4 %>% mutate(accurate = 1*(pred == Class))
+
+sum(data_full_test4$accurate)/nrow(data_full_test4)
+
+
+summary(data_logit1)
+summary(data_logit2)
+summary(data_logit3)
+summary(data_logit4)
+
